@@ -1,0 +1,50 @@
+PC Monitor – Hardware-Überwachung für Windows 10/11
+====================================================
+
+STARTEN
+  PcMonitor.exe doppelklicken -> Windows fragt nach Admin-Rechten -> "Ja".
+  (Admin ist nötig, damit CPU-Temperatur und Mainboard-Lüfter gelesen werden können.)
+  Keine Installation nötig, .NET ist schon eingebaut.
+
+  Falls Windows SmartScreen meckert ("Der Computer wurde durch Windows geschützt"):
+  "Weitere Informationen" -> "Trotzdem ausführen". Die Datei ist nur nicht digital signiert.
+
+EINMALIG: PawnIO-Treiber
+  Für CPU-Temperatur + Mainboard-Lüfter braucht es den signierten Treiber PawnIO
+  (nutzt auch LibreHardwareMonitor). Fehlt er, zeigt die App oben einen gelben Hinweis –
+  draufklicken installiert ihn per winget. Oder manuell in der Eingabeaufforderung:
+      winget install --id namazso.PawnIO -e
+  Danach PC Monitor neu starten. GPU-Werte (NVIDIA) gehen auch ohne.
+
+HWiNFO ALS QUELLE (empfohlen für maximale Genauigkeit)
+  1. HWiNFO installieren (hwinfo.com) und im Modus "Sensors-only" starten.
+  2. Im Sensorfenster unten aufs Zahnrad -> Haken bei "Shared Memory Support" -> OK.
+  3. HWiNFO offen lassen (darf minimiert im Tray laufen).
+  PC Monitor erkennt das automatisch, oben steht dann grün "Quelle: HWiNFO".
+  Achtung: In der kostenlosen HWiNFO-Version geht Shared Memory nach 12 Stunden aus und
+  muss neu aktiviert werden. Bis dahin nutzt PC Monitor ("Automatisch") die internen Sensoren.
+  Quelle umstellen: Einstellungen -> Sensor-Quelle.
+
+ALLE SENSOREN
+  Button "Alle Sensoren" zeigt jeden Rohwert der aktuellen Quelle mit Minimum/Maximum
+  und Suchfeld, ideal zum Vergleichen mit HWiNFO.
+
+FUNKTIONEN
+  - CPU: Temperatur (Durchschnitt aller P-Kerne, sonst aller Kerne), Auslastung, Takt, Leistung (W)
+  - GPU: Temperatur, Hotspot, Auslastung, Takt, Leistung, VRAM
+  - RAM, Netzwerk (Download/Upload), Laufwerke, SSD/HDD-Temperaturen, Lüfter
+  - Verlaufsgraphen (3 Minuten), flüssig mit ca. 60 Bildern/s, Werte gleiten weich
+  - Warnungen als Windows-Benachrichtigung bei Überschreiten der Grenzwerte
+  - Tray-Symbol zeigt die höchste Temperatur live als Zahl
+  - Einstellungen: Grenzwerte, Intervall, Tray, Autostart mit Windows
+
+  Minimieren (_) = bleibt normal unten in der Taskleiste.
+  Schließen (X) = läuft im Tray weiter (abschaltbar in den Einstellungen).
+  Fenster weg? Einfach PcMonitor.exe nochmal starten -> das laufende Fenster kommt nach vorne.
+  Komplett beenden: Rechtsklick aufs Tray-Symbol -> Beenden.
+  Fehlerprotokoll (falls etwas abstürzt): %APPDATA%\PcMonitor\log.txt
+  Einstellungen liegen in %APPDATA%\PcMonitor\settings.json
+
+QUELLCODE
+  Im Ordner "Quellcode" (C# / .NET 8 / WinForms, Sensoren über LibreHardwareMonitorLib).
+  Selbst bauen: dotnet publish -c Release
